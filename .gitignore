@@ -7,3 +7,6 @@ Debug
 *.user
 Release
 /test1/text.txt
+*.diagsession
+/test1.psess
+/test1190206.vspx
