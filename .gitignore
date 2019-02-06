@@ -5,3 +5,5 @@
 .vs
 Debug
 *.user
+Release
+/test1/text.txt
