@@ -1,0 +1,12 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define TEST_OWNER(ownerAlias) TEST_METHOD_ATTRIBUTE(L"Owner", ownerAlias)
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define TEST_PRIORITY(priority) TEST_METHOD_ATTRIBUTE(L"Priority", L#priority)
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define END_TEST_METHOD_ATTRIBUTE() {L"TestMethodAttributeEnd", NULL, NULL, ::Microsoft::VisualStudio::CppUnitTestFramework::MethodAttributeMetadata::METHOD_ATTRIBUTE} }; return s_Metadata; }
