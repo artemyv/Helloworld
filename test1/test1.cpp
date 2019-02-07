@@ -7,6 +7,28 @@
 #include <iomanip>
 //#include <codecvt>
 
+#define WIN32_LEAN_AND_MEAN 
+#pragma warning ( push , 1 )
+#include <windows.h>
+#pragma warning ( pop )
+
+std::wstring utf8toutf16(const std::string input)
+{
+	auto res = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), static_cast<int>(input.size()), nullptr, 0);
+	if (res <= 0)
+	{
+		return L"";
+	}
+	std::wstring buf;
+	buf.resize(res);
+	res = MultiByteToWideChar(CP_UTF8, 0, input.c_str(), static_cast<int>(input.size()), &buf[0], res);
+	if (res <= 0)
+	{
+		return L"";
+	}
+	return buf;
+}
+
 int main()
 {
 	
@@ -15,7 +37,7 @@ int main()
 	// or u8"zß水🍌"
 	// or "\x7a\xc3\x9f\xe6\xb0\xb4\xf0\x9f\x8d\x8c";
 
-	for(auto i=0;i<10000; i++)
+	for(auto i=0;i<1; i++)
 	{
 		std::wstring strw = utf8toutf16(data);
 		std::cout << "The UTF-8 string contains the following UTF-16 code points: \n";
