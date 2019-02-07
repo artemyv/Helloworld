@@ -58,9 +58,11 @@ namespace UnitTestUtility
 
             Assert::AreEqual(result, std::wstring(L"שלום друзья"));
         }
+
         BEGIN_TEST_METHOD_ATTRIBUTE(TestToBeFailed)
             TEST_OWNER(L"vart")
             TEST_PRIORITY(1)
+            TEST_IGNORE()
         END_TEST_METHOD_ATTRIBUTE()
         TEST_METHOD(TestToBeFailed)
         {
