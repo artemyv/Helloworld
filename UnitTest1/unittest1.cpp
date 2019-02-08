@@ -23,59 +23,37 @@ namespace UnitTestUtility
     {
     public:
 
-        BEGIN_TEST_METHOD_ATTRIBUTE(TestMixedString)
+        BEGIN_TEST_METHOD_ATTRIBUTE(TestMixedu8String)
             TEST_OWNER(L"vart")
             TEST_PRIORITY(1)
         END_TEST_METHOD_ATTRIBUTE()
 
-        TEST_METHOD(TestMixedString)
+        TEST_METHOD(TestMixedu8String)
         {
-
-            Logger::WriteMessage("TestMixedString Started for: ");
-            std::string data = u8"zß水🍌";
-            Logger::WriteMessage(data.c_str());
+            std::string data = u8"zß水🍌 שלום друзья";
             std::wstring result = utf8toutf16(data);
-
-            Logger::WriteMessage("Result: ");
-            Logger::WriteMessage(result.c_str());
-
-            Assert::AreEqual(result, std::wstring(L"zß水🍌"));
-        }
-        BEGIN_TEST_METHOD_ATTRIBUTE(TestRightToLeft)
-            TEST_OWNER(L"vart")
-            TEST_PRIORITY(1)
-        END_TEST_METHOD_ATTRIBUTE()
-        TEST_METHOD(TestRightToLeft)
-        {
-
-            Logger::WriteMessage("TestRightToLeft Started for: ");
-            std::string data = u8"שלום друзья";
-            Logger::WriteMessage(data.c_str());
-            std::wstring result = utf8toutf16(data);
-
-            Logger::WriteMessage("Result: ");
-            Logger::WriteMessage(result.c_str());
-
-            Assert::AreEqual(result, std::wstring(L"שלום друзья"));
+            Assert::AreEqual(result, std::wstring(L"zß水🍌 שלום друзья"));
         }
 
-        BEGIN_TEST_METHOD_ATTRIBUTE(TestToBeFailed)
+        BEGIN_TEST_METHOD_ATTRIBUTE(TestConstChar)
             TEST_OWNER(L"vart")
             TEST_PRIORITY(1)
-            TEST_IGNORE()
         END_TEST_METHOD_ATTRIBUTE()
-        TEST_METHOD(TestToBeFailed)
+        TEST_METHOD(TestConstChar)
         {
-
-            Logger::WriteMessage("TestToBeFailed Started for: ");
-            std::string data = u8"aaa";
-            Logger::WriteMessage(data.c_str());
+            const char* data = u8"zß水🍌 שלום друзья";
             std::wstring result = utf8toutf16(data);
-
-            Logger::WriteMessage("Result: ");
-            Logger::WriteMessage(result.c_str());
-
-            Assert::AreEqual(result, std::wstring(L"bbb"));
+            Assert::AreEqual(result, std::wstring(L"zß水🍌 שלום друзья"));
+        }
+        BEGIN_TEST_METHOD_ATTRIBUTE(TestNullptr)
+            TEST_OWNER(L"vart")
+            TEST_PRIORITY(1)
+            END_TEST_METHOD_ATTRIBUTE()
+            TEST_METHOD(TestNullptr)
+        {
+            const char* data = nullptr;
+            std::wstring result = utf8toutf16(data);
+            Assert::AreEqual(result, std::wstring(L""));
         }
 
     };
