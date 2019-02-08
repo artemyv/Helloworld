@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "test1\test1.vcxproj", "{C6BCDE4A-EE11-4E65-B7BE-2E90D3C88119}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest1", "UnitTest1\UnitTest1.vcxproj", "{4BB18791-337B-4C2D-B734-CA19630983B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UT", "UnitTest1\UnitTest1.vcxproj", "{4BB18791-337B-4C2D-B734-CA19630983B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility", "Utility\Utility.vcxproj", "{CE0FBF85-A08C-454F-AD6E-B0DDE98337A7}"
 EndProject
