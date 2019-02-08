@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UT", "UnitTest1\UnitTest1.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility", "Utility\Utility.vcxproj", "{CE0FBF85-A08C-454F-AD6E-B0DDE98337A7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleManualTest", "GoogleManualTest\GoogleManualTest.vcxproj", "{C21CCFA5-2098-4704-814F-D712E505893E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{CE0FBF85-A08C-454F-AD6E-B0DDE98337A7}.Release|x64.Build.0 = Release|x64
 		{CE0FBF85-A08C-454F-AD6E-B0DDE98337A7}.Release|x86.ActiveCfg = Release|Win32
 		{CE0FBF85-A08C-454F-AD6E-B0DDE98337A7}.Release|x86.Build.0 = Release|Win32
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Debug|x64.ActiveCfg = Debug|x64
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Debug|x64.Build.0 = Debug|x64
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Debug|x86.ActiveCfg = Debug|Win32
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Debug|x86.Build.0 = Debug|Win32
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Release|x64.ActiveCfg = Release|x64
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Release|x64.Build.0 = Release|x64
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Release|x86.ActiveCfg = Release|Win32
+		{C21CCFA5-2098-4704-814F-D712E505893E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
