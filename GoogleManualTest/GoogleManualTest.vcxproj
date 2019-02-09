@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GoogleManualTest.cpp" />
+    <ClCompile Include="Utility_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.vcxproj">
       <Project>{ce0fbf85-a08c-454f-ad6e-b0dde98337a7}</Project>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
