@@ -55,21 +55,21 @@ namespace {
          */
         const char* const data = "aaa\x00A9\x00B0\x00B5\x00C4\x00D6\x00E4\x00FC\x00FF" "bbb";
 
-        auto result = utf8toutf16(data, true);
+        auto result = utf8toutf16(data);
         ASSERT_EQ(result, std::wstring(L"aaa\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFDbbb")); //incorrect UTF character - conversion skipped
     }
     TEST_F(Narrow2WideConverterTest, Test00A9)
     {
         const char* const data = "aaa\x00A9" "bbb"; //©
 
-        auto result = utf8toutf16(data);
+        auto result = utf8toutf16(data, false);
         ASSERT_EQ(result, std::wstring(L"")); //incorrect UTF character - conversion failes
     }
     TEST_F(Narrow2WideConverterTest, Test00B0)
     {
         const char* const data = "aaa\x00B0" "bbb"; //©
 
-        auto result = utf8toutf16(data);
+        auto result = utf8toutf16(data, false);
         ASSERT_EQ(result, std::wstring(L"")); //incorrect UTF character - conversion failes
     }
 }  // namespace
