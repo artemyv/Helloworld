@@ -6,9 +6,8 @@
 
 namespace {
 
-    class Narrow2WideConverterTest :public ::testing::Test
+    class Narrow2WideConverterTest :public ::testing::Test, public Utility::CUtfConvertor
     {
-
     };
     // Tests that the Foo::Bar() method does Abc.
     TEST_F(Narrow2WideConverterTest, TestMixedu8String) {

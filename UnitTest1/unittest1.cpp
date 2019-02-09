@@ -21,6 +21,7 @@ namespace UnitTestUtility
 {
     TEST_CLASS(Narrow2WideConverter)
     {
+        std::unique_ptr<Utility::IUtfConvertor> convertor = Utility::IUtfConvertor::Create();
     public:
 
         BEGIN_TEST_METHOD_ATTRIBUTE(TestMixedu8String)
@@ -31,7 +32,7 @@ namespace UnitTestUtility
         TEST_METHOD(TestMixedu8String)
         {
             std::string data = u8"zß水🍌 שלום друзья";
-            std::wstring result = utf8toutf16(data);
+            std::wstring result = convertor->utf8toutf16(data);
             Assert::AreEqual(result, std::wstring(L"zß水🍌 שלום друзья"));
         }
 
@@ -42,7 +43,7 @@ namespace UnitTestUtility
         TEST_METHOD(TestConstChar)
         {
             const char* data = u8"zß水🍌 שלום друзья";
-            std::wstring result = utf8toutf16(data);
+            std::wstring result = convertor->utf8toutf16(data);
             Assert::AreEqual(result, std::wstring(L"zß水🍌 שלום друзья"));
         }
         BEGIN_TEST_METHOD_ATTRIBUTE(TestNullptr)
@@ -52,7 +53,7 @@ namespace UnitTestUtility
             TEST_METHOD(TestNullptr)
         {
             const char* data = nullptr;
-            std::wstring result = utf8toutf16(data);
+            std::wstring result = convertor->utf8toutf16(data);
             Assert::AreEqual(result, std::wstring(L""));
         }
 

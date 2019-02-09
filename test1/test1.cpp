@@ -10,10 +10,11 @@ int main()
 	std::string data = u8"z\u00df\u6c34\U0001f34c";
 	// or u8"zß水🍌"
 	// or "\x7a\xc3\x9f\xe6\xb0\xb4\xf0\x9f\x8d\x8c";
+    auto convertor = Utility::IUtfConvertor::Create();
 
 	for(auto i=0;i<1; i++)
 	{
-		std::wstring strw = utf8toutf16(data);
+		std::wstring strw = convertor->utf8toutf16(data);
 		std::cout << "The UTF-8 string contains the following UTF-16 code points: \n";
 		for (wchar_t c : strw) {
 			std::cout << ": U+" << std::hex << std::setw(4) << std::setfill('0') << c << '\n';
