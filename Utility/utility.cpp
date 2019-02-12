@@ -59,7 +59,7 @@ namespace {
     TEST_F(Narrow2WideCConverterTest, TestMixedu8String) {
         std::string data = u8"zß水🍌 שלום друзья";
         std::wstring result = utf8toutf16(data);
-        ASSERT_EQ(result, std::wstring(L"zß水🍌 שלום друзья"));
+        ASSERT_EQ(result, std::wstring(L"zß水🍌 שלום друзья__"));
     }
 
     TEST_F(Narrow2WideCConverterTest, TestConstChar)
