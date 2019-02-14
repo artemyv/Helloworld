@@ -23,17 +23,3 @@ namespace Utility
     };
 }
 
-//Sample
-#if 0
-class SampleConvertorUser
-{
-private:
-    std::unique_ptr<Utility::IUtfConvertor> _convertor;
-public:
-    //Production
-    SampleConvertorUser() :SampleConvertorUser(Utility::IUtfConvertor::Create()) {}
-    //Testing
-    SampleConvertorUser(std::unique_ptr<Utility::IUtfConvertor> conv) :_convertor(std::move(conv)){}
-
-};
-#endif

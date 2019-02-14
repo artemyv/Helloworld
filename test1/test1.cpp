@@ -5,7 +5,6 @@
 
 void func(Utility::IUtfConvertor& iconv, std::string data);
 
-#ifndef GOOGLE_TEST
 int main()
 {
 	
@@ -20,7 +19,7 @@ int main()
 
 	
 }
-#endif
+
 
 void func(Utility::IUtfConvertor& iconv, std::string data)
 {
@@ -33,31 +32,3 @@ void func(Utility::IUtfConvertor& iconv, std::string data)
         }
     }
 }
-
-#ifdef GOOGLE_TEST
-
-#pragma warning (push,1)
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"  // Brings in Google Mock.
-#pragma warning (pop)
-
-namespace {
-    class MockConvertor : public Utility::IUtfConvertor {
-    public:
-        MOCK_METHOD0(utf8toutf16, std::wstring (const std::string& , bool ));
-        MOCK_METHOD1(utf8toutf16, std::wstring (const char* , bool  ));
-    };
-
-    class FuncTest :public ::testing::Test
-    {
-    };
-    // Tests that the Foo::Bar() method does Abc.
-    TEST_F(FuncTest, TestMixedu8String) {
-        auto m = std::make_unique<MockConvertor>();
-        std::string data = u8"zß水🍌 שלום друзья";
-        EXPECT_CALL(*m, utf8toutf16(data))              // #3
-            .Times(AtLeast(1));
-        std::wstring result = func(m , data);
-        ASSERT_TRUE(true);
-    }
-#endif

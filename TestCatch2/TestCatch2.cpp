@@ -3,6 +3,26 @@
 
 #include <utility.h>
 
+#include "..\test1\widget.cpp"
+
+#include <sstream>
+
+TEST_CASE("Test printer driver", "[Convertor]") {
+ 
+    Printer wr('A');
+    Printer wi(5);
+    Driver n;
+    std::ostringstream ss;
+    ss << '<';
+    n.usePrinter(ss,wr);
+    n.usePrinter(ss, wi);
+    ss << '>';
+
+    REQUIRE(ss);
+    REQUIRE(ss.str() == "<A,5,>");
+
+}
+
 TEST_CASE("Convertion performed properly", "[Convertor]") {
     SetConsoleOutputCP(CP_UTF8);
     // Enable buffering to prevent VS from chopping up UTF-8 byte sequences
@@ -11,7 +31,7 @@ TEST_CASE("Convertion performed properly", "[Convertor]") {
 
     std::unique_ptr<Utility::IUtfConvertor> convertor = Utility::IUtfConvertor::Create();
 
-    REQUIRE(convertor->utf8toutf16(u8"zß水🍌 שלום друзья") == std::wstring(L"zß水🍌 שלום друзья__"));
+    REQUIRE(convertor->utf8toutf16(u8"zß水🍌 שלום друзья") == std::wstring(L"zß水🍌 שלום друзья"));
     REQUIRE(convertor->utf8toutf16(std::string(u8"zß水🍌 שלום друзья")) == std::wstring(L"zß水🍌 שלום друзья"));
     REQUIRE(convertor->utf8toutf16(nullptr) == std::wstring(L""));
 
