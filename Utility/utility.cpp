@@ -1,10 +1,15 @@
-#include  <string>
-#include <utility.h>
-
 #define WIN32_LEAN_AND_MEAN 
 #pragma warning ( push , 1 )
 #include <windows.h>
 #pragma warning ( pop )
+
+
+#include  <string>
+#include <iostream>
+#include <iomanip>
+
+#include <utility.h>
+
 
 namespace Utility
 {
@@ -43,4 +48,14 @@ std::wstring Utility::CUtfConvertor::utf8toutf16(const std::string& input, bool 
         return L"";
     }
     return buf;
+}
+
+std::wstring func(Utility::IUtfConvertor& iconv, std::string data)
+{
+    std::wstring strw = iconv.utf8toutf16(data);
+    std::cout << "The UTF-8 string contains the following UTF-16 code points: \n";
+    for (wchar_t c : strw) {
+        std::cout << ": U+" << std::hex << std::setw(4) << std::setfill('0') << c << '\n';
+    }
+    return strw;
 }
