@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
+
 #include "fakeit.hpp" 
+
 using namespace fakeit;
 
 //#include <utility.h>
@@ -28,6 +30,7 @@ TEST_CASE("Fakeit", "[Fake]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
+    When(Method(mock, foo)).Return(-1);
     When(Method(mock, foo).Using("1")).Return(100);
     SECTION("Good")
     {
@@ -35,7 +38,7 @@ TEST_CASE("Fakeit", "[Fake]")
     }
     SECTION("Bad")
     {
-        REQUIRE(func1(mock.get(), "2") != 100);
+        REQUIRE(func1(mock.get(), "2") == -1);
     }
 }
 
@@ -43,6 +46,7 @@ TEST_CASE("Fakeit2", "[Fake]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
+    When(Method(mock, bar)).Return(-1);
     When(Method(mock, bar).Using("1")).Return(100);
     SECTION("Good")
     {
@@ -50,7 +54,7 @@ TEST_CASE("Fakeit2", "[Fake]")
     }
     SECTION("Bad")
     {
-        REQUIRE(func2(mock.get(), "2") != 100);
+        REQUIRE(func2(mock.get(), "2") == -1);
     }
 }
 
@@ -58,6 +62,7 @@ TEST_CASE("Fakeit3", "[Fake]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
+    When(Method(mock, fb)).Return(-1);
     When(Method(mock, fb).Using("11")).Return(100);
     SECTION("Good")
     {
@@ -67,6 +72,6 @@ TEST_CASE("Fakeit3", "[Fake]")
     SECTION("Bad")
     {
         std::string data = "2";
-        REQUIRE(func3(mock.get(), data) != 100);
+        REQUIRE(func3(mock.get(), data) == -1);
     }
 }
