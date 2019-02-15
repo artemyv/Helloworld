@@ -26,7 +26,7 @@ int func3(const SomeInterface& i, std::string& val)
     val += "1";
     return i.fb(val);
 }
-TEST_CASE("Fakeit", "[Fake]")
+TEST_CASE("Fakeit", "[Fake][.]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
@@ -42,7 +42,7 @@ TEST_CASE("Fakeit", "[Fake]")
     }
 }
 
-TEST_CASE("Fakeit2", "[Fake]")
+TEST_CASE("Fakeit2", "[Fake][.]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
@@ -61,17 +61,23 @@ TEST_CASE("Fakeit2", "[Fake]")
 TEST_CASE("Fakeit3", "[Fake]")
 {
     Mock<SomeInterface> mock;
-    // Stub a method to return a value once
-    When(Method(mock, fb)).Return(-1);
-    When(Method(mock, fb).Using("11")).Return(100);
+    
+    When(Method(mock, fb)).Return(3_Times(-1)); //this should be first for some reason
+
+    When(Method(mock, fb).Using("111")).Return(200);
+    When(Method(mock, fb).Using("11")).Return(2_Times(100));
+    When(Method(mock, fb).Using("1111")).Return(300);
+
     SECTION("Good")
     {
         std::string data = "1";
+        std::string data2 = "2";
+        REQUIRE(func3(mock.get(), data2) == -1);
         REQUIRE(func3(mock.get(), data) == 100);
-    }
-    SECTION("Bad")
-    {
-        std::string data = "2";
-        REQUIRE(func3(mock.get(), data) == -1);
+        REQUIRE(func3(mock.get(), data2) == -1);
+        data = "1";
+        REQUIRE(func3(mock.get(), data) == 100);
+        REQUIRE(func3(mock.get(), data2) == -1);
+        REQUIRE(func3(mock.get(), data) == 200);
     }
 }
