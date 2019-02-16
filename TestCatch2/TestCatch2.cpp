@@ -42,19 +42,21 @@ TEST_CASE("Fakeit", "[Fake][.]")
     }
 }
 
-TEST_CASE("Fakeit2", "[Fake]")
+TEST_CASE("Fakeit2", "[Fake][.]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
-    When(Method(mock, bar).Using(Ne(std::string("1")))).Return(-1);
-    When(Method(mock, bar).Using("1")).Return(100);
     SECTION("Good")
     {
+        int  called = 0;
+        When(Method(mock, bar).Using("1")).Do([&](const std::string& p) 
+        {
+            called++;
+            WARN("bar(" + p + ") called");
+            return 100; 
+        });
         REQUIRE(func2(mock.get(), "1") == 100);
-    }
-    SECTION("Bad")
-    {
-        REQUIRE(func2(mock.get(), "2") == -1);
+        REQUIRE(called == 1);
     }
 }
 
