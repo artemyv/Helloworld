@@ -1,24 +1,30 @@
-﻿#include  <future>
+﻿#include <future>
 #include <iostream>
-
+#include <string>
+#include <vector>
 
 std::future<int> test()
 {
-    std::promise<int> ret_val;
-    auto local = ret_val.get_future();
-    auto func = [](std::promise<int>&& ret_val) -> int
+    struct Return
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        ret_val.set_value(5);
+        std::string msg;
+        int code = -1;
+        std::vector<uint8_t> value;
+    };
+    std::promise<Return> ret_val;
+    auto local = ret_val.get_future();
+    auto func = [](std::promise<Return>&& ret_val) -> int
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        ret_val.set_value({ "Hello", 5, {1,2,3,4,5} });
         return 0;
     };
 
     auto task = std::async(std::launch::async, func, std::move(ret_val));
-    task.wait_for(std::chrono::milliseconds(100));
-    if (local.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
+    if (local.wait_for(std::chrono::milliseconds(100)) == std::future_status::ready)
     {
         auto i = local.get();
-        std::cout << "call local=" << i << "\n";
+        std::cout << "call local=" << i.msg << "\n";
     }
 
     return task;
@@ -37,5 +43,3 @@ int main()
     std::cout << "wait finished: " << duration.count() << "ms\n";
 
 }
-
-
