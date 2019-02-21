@@ -34,7 +34,7 @@ int func_sample(const InterfaceSample& i, const std::string& val)
     return i.bar(val);
 }
 
-TEST_CASE("Fakeit.Verify", "[Fake]")
+TEST_CASE("Fakeit.Verify", "[Fake][!mayfail]")
 {
     Mock<InterfaceSample> mock;
     SECTION("Good")

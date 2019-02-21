@@ -1,23 +1,41 @@
-﻿#include <iostream>
-#include <iomanip>
+﻿#include  <future>
+#include <iostream>
 
-#include <utility.h>
 
+std::future<int> test()
+{
+    std::promise<int> ret_val;
+    auto local = ret_val.get_future();
+    auto func = [](std::promise<int>&& ret_val) -> int
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        ret_val.set_value(5);
+        return 0;
+    };
+
+    auto task = std::async(std::launch::async, func, std::move(ret_val));
+    task.wait_for(std::chrono::milliseconds(100));
+    if (local.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
+    {
+        auto i = local.get();
+        std::cout << "call local=" << i << "\n";
+    }
+
+    return task;
+}
 
 int main()
 {
-	
-	// UTF-8 narrow multibyte encoding
-	std::string data = u8"z\u00df\u6c34\U0001f34c";
-	// or u8"zß水🍌"
-	// or "\x7a\xc3\x9f\xe6\xb0\xb4\xf0\x9f\x8d\x8c";
-    auto convertor = Utility::IUtfConvertor::Create();
-    func(*convertor, std::move(data));//we do not pass sownersip of convertor - just let it use our object for a time it is running
+    auto start = std::chrono::steady_clock::now();
+    auto res = test();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::steady_clock::now() - start);
+    std::cout << "call finished: " << duration.count() << "ms\n";
+    res.wait_for(std::chrono::milliseconds(2000));
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::steady_clock::now() - start);
+    std::cout << "wait finished: " << duration.count() << "ms\n";
 
-    //as soon asfunc exists - convertor is again our responsibility
-
-	
 }
-
 
 

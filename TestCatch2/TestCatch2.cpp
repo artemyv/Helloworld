@@ -26,7 +26,7 @@ int func3(const SomeInterface& i, std::string& val)
     val += "1";
     return i.fb(val);
 }
-TEST_CASE("Fakeit", "[Fake][.]")
+TEST_CASE("Fakeit", "[Fake]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
@@ -42,7 +42,7 @@ TEST_CASE("Fakeit", "[Fake][.]")
     }
 }
 
-TEST_CASE("Fakeit2", "[Fake][.]")
+TEST_CASE("Fakeit2", "[Fake]")
 {
     Mock<SomeInterface> mock;
     // Stub a method to return a value once
@@ -60,7 +60,7 @@ TEST_CASE("Fakeit2", "[Fake][.]")
     }
 }
 
-TEST_CASE("Fakeit3", "[Fake][.]")
+TEST_CASE("Fakeit3", "[Fake]")
 {
     Mock<SomeInterface> mock;
     
@@ -82,4 +82,92 @@ TEST_CASE("Fakeit3", "[Fake][.]")
         REQUIRE(func3(mock.get(), data2) == -1);
         REQUIRE(func3(mock.get(), data) == 200);
     }
+}
+
+
+namespace Catch {
+    class TerseReporter : public StreamingReporterBase<TerseReporter>
+    {
+    public:
+        TerseReporter(ReporterConfig const& _config)
+            : StreamingReporterBase(_config)
+        {
+        }
+
+        static std::string getDescription()
+        {
+            return "Terse output";
+        }
+
+        virtual void assertionStarting(AssertionInfo const&) {}
+        virtual bool assertionEnded(AssertionStats const& stats) {
+            if (!stats.assertionResult.succeeded()) {
+                const auto location = stats.assertionResult.getSourceInfo();
+                std::cout << location.file << "(" << location.line << ") error\n"
+                    << "\t";
+
+                switch (stats.assertionResult.getResultType()) {
+                case ResultWas::DidntThrowException:
+                    std::cout << "Expected exception was not thrown";
+                    break;
+
+                case ResultWas::ExpressionFailed:
+                    std::cout << "Expression is not true: " << stats.assertionResult.getExpandedExpression();
+                    break;
+
+                case ResultWas::Exception:
+                    std::cout << "Unexpected exception";
+                    break;
+
+                default:
+                    std::cout << "Test failed";
+                    break;
+                }
+
+                std::cout << std::endl;
+            }
+
+            return true;
+        }
+
+        void sectionStarting(const SectionInfo& info) override
+        {
+            ++sectionNesting_;
+
+            StreamingReporterBase::sectionStarting(info);
+        }
+
+        void sectionEnded(const SectionStats& stats) override
+        {
+            if (--sectionNesting_ == 0) {
+                totalDuration_ += stats.durationInSeconds;
+            }
+
+            StreamingReporterBase::sectionEnded(stats);
+        }
+
+        void testRunEnded(const TestRunStats& stats) override
+        {
+            if (stats.totals.assertions.allPassed()) {
+                std::cout << "SUCCESS (" << stats.totals.testCases.total() << " tests, "
+                    << stats.totals.assertions.total() << " assertions, "
+                    << static_cast<int> (totalDuration_ * 1000) << " ms)";
+            }
+            else {
+                std::cout << "FAILURE (" << stats.totals.assertions.failed << " out of "
+                    << stats.totals.assertions.total() << " failed, "
+                    << static_cast<int> (totalDuration_ * 1000) << " ms)";
+            }
+
+            std::cout << std::endl;
+
+            StreamingReporterBase::testRunEnded(stats);
+        }
+
+    private:
+        int sectionNesting_ = 0;
+        double totalDuration_ = 0;
+    };
+
+    CATCH_REGISTER_REPORTER("terse", TerseReporter)
 }
