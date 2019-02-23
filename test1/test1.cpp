@@ -6,6 +6,7 @@
 #include <list>
 #include <chrono>
 #include <optional>
+#include "Guarded.h"
 
 struct AsyncParam
 {
@@ -27,13 +28,13 @@ using MY_OBJ_HANDLE = struct MY_OBJ_HANDLE_DUMMY*;
 
 class MyClass: public MY_OBJ_HANDLE_DUMMY
 {
-    std::mutex m_vulue_mutex;
-    _Guarded_by_(m_vulue_mutex) int m_value = -1;
+    Guarded<int> m_value{ -1 };
 public:
     void SetGet(bool bSet, int& value)
     {
-        if (bSet) m_value = value;
-        else value = m_value;
+        std::lock_guard<Guarded<int>> lock(m_value);
+        if (bSet) m_value.get() = value;
+        else value = m_value.get();
     }
 };
 
