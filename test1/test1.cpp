@@ -5,9 +5,48 @@
 #include <utility>
 #include <list>
 
+extern "C" struct MY_OBJ_HANDLE_DUMMY
+{
+};
+using MY_OBJ_HANDLE = struct MY_OBJ_HANDLE_DUMMY*;
+
+class MyClass: public MY_OBJ_HANDLE_DUMMY
+{
+    int m_value;
+public:
+    void SetGet(bool bSet, int& value)
+    {
+        if (bSet) m_value = value;
+        else value = m_value;
+    }
+};
+
+extern "C" MY_OBJ_HANDLE CreateMyClass()
+{
+    return static_cast<MY_OBJ_HANDLE>(new MyClass);
+}
+extern "C" void DestructMyClass(MY_OBJ_HANDLE h)
+{
+    delete static_cast<MyClass*>(h);
+}
+
+extern "C" void SetValue(MY_OBJ_HANDLE h, int value)
+{
+    auto c = static_cast<MyClass*>(h);
+    c->SetGet(true, value);
+}
+
+extern "C" int GetValue(MY_OBJ_HANDLE h)
+{
+    auto c = static_cast<MyClass*>(h);
+    int value;
+    c->SetGet(false, value);
+    return value;
+}
+
 template<class Func, class ...Args>
-std::pair<bool,bool> wrapper(std::list<std::future<int>>& peding, Func f, Args... args) {
-    bool bAsync = false;
+std::pair<bool,bool> wrapper(std::list<std::future<int>>& peding, Func f, Args&&... args) {
+    bool bAsync = true;
     if (bAsync)
     {
         auto task = std::async(std::launch::async, f, std::forward<Args>(args)...);
@@ -80,6 +119,16 @@ void test1(std::list<std::future<int>>& peding)
 
 int main()
 {
+    auto h = CreateMyClass();
+
+    //Do stuff with h
+    SetValue(h, 123);
+    int value = GetValue(h);
+    std::cout << " read " << value << "\n";
+
+
+    DestructMyClass(h);
+
     std::list<std::future<int>> peding;
     auto start = std::chrono::steady_clock::now();
     test(peding);
