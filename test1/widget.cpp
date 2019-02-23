@@ -19,3 +19,15 @@ std::ostream& Driver::usePrinter(std::ostream& o, Printer <T>& foo)
 {
     return foo.print(o);
 }
+
+struct A
+{
+    A(int n) : a(n) {}
+    int a;
+};
+// Compile with /w15038 to enable the warning
+struct B : A
+{
+    B(int n) : b(n), A(b) {} // warning C5038: data member ‘B::b’ will be initialized after base class ‘A’
+    int b;
+};
