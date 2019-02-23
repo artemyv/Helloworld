@@ -32,7 +32,7 @@ class MyClass: public MY_OBJ_HANDLE_DUMMY
 public:
     void SetGet(bool bSet, int& value)
     {
-        std::lock_guard<Guarded<int>> lock(m_value);
+        std::lock_guard lock(m_value);
         if (bSet) m_value.get() = value;
         else value = m_value.get();
     }
