@@ -4,6 +4,21 @@
 #include <vector>
 #include <utility>
 #include <list>
+#include <chrono>
+#include <optional>
+
+struct AsyncParam
+{
+    bool bAsync{ false };
+    std::optional<std::chrono::milliseconds> timeout{};
+    std::optional<int> fail_count{};
+};
+AsyncParam GetParameters() //[[ensures:!bAsync || (timeout.has_value() && fail_count.has_value()) ]]
+{
+    AsyncParam res = { true, std::chrono::milliseconds(100), 100 };
+    return res;
+
+}
 
 extern "C" struct MY_OBJ_HANDLE_DUMMY
 {
@@ -12,7 +27,8 @@ using MY_OBJ_HANDLE = struct MY_OBJ_HANDLE_DUMMY*;
 
 class MyClass: public MY_OBJ_HANDLE_DUMMY
 {
-    int m_value;
+    std::mutex m_vulue_mutex;
+    _Guarded_by_(m_vulue_mutex) int m_value = -1;
 public:
     void SetGet(bool bSet, int& value)
     {
@@ -46,11 +62,11 @@ extern "C" int GetValue(MY_OBJ_HANDLE h)
 
 template<class Func, class ...Args>
 std::pair<bool,bool> wrapper(std::list<std::future<int>>& peding, Func f, Args&&... args) {
-    bool bAsync = true;
-    if (bAsync)
+    auto p = GetParameters();
+    if (p.bAsync)
     {
         auto task = std::async(std::launch::async, f, std::forward<Args>(args)...);
-        if (task.wait_for(std::chrono::milliseconds(100)) == std::future_status::ready)
+        if (task.wait_for(p.timeout.value()) == std::future_status::ready)
         {
             return std::make_pair(true, true);
         }
@@ -89,7 +105,7 @@ void test(std::list<std::future<int>>& peding)
     if (local.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
     {
         auto i = local.get();
-        std::cout << "call1 local=" << i.msg << "\n";
+        std::cout << "call1 local=" << i.msg << " " << i.code << "\n";
     }
 
     return;
@@ -116,6 +132,7 @@ void test1(std::list<std::future<int>>& peding)
 
     return;
 }
+
 
 int main()
 {
