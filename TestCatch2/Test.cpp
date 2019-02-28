@@ -11,14 +11,14 @@
  */
 #include "catch.hpp"
 
-//downloaded from https://github.com/eranpeer/FakeIt/tree/master/single_header/catch
-/*
- *  FakeIt - A Simplified C++ Mocking Framework
- *  Copyright (c) Eran Pe'er 2013
- *  Generated: 2018-08-17 00:22:40.428924
- *  Distributed under the MIT License. Please refer to the LICENSE file at:
- *  https://github.com/eranpeer/FakeIt
- */
+ //downloaded from https://github.com/eranpeer/FakeIt/tree/master/single_header/catch
+ /*
+  *  FakeIt - A Simplified C++ Mocking Framework
+  *  Copyright (c) Eran Pe'er 2013
+  *  Generated: 2018-08-17 00:22:40.428924
+  *  Distributed under the MIT License. Please refer to the LICENSE file at:
+  *  https://github.com/eranpeer/FakeIt
+  */
 
 #include "fakeit.hpp" 
 

@@ -21,6 +21,6 @@ namespace Utility
         //The Factory function Used to create the real Converter object
         static std::unique_ptr<Utility::IUtfConvertor> Create();
     };
-}
+}//namespace Utility
 
 std::wstring func(Utility::IUtfConvertor& iconv, std::string data);

@@ -13,7 +13,7 @@
 
 namespace Utility
 {
-    class CUtfConvertor:public IUtfConvertor
+    class CUtfConvertor :public IUtfConvertor
     {
     protected:
         std::wstring utf8toutf16(const std::string& input, bool ignore_invalid = true) override;
@@ -29,7 +29,10 @@ std::unique_ptr<Utility::IUtfConvertor>  Utility::IUtfConvertor::Create()
 
 std::wstring Utility::CUtfConvertor::utf8toutf16(const char* input, bool ignore_invalid)
 {
-    if (nullptr == input) return L"";
+    if (nullptr == input)
+    {
+        return L"";
+    }
     return utf8toutf16(std::string(input), ignore_invalid);
 }
 
