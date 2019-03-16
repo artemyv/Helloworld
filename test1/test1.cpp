@@ -1,72 +1,38 @@
-﻿#include <future>
-#include <iostream>
+﻿#include "test.h"
 #include <string>
-#include <vector>
-#include <utility>
-#include <list>
-#include <chrono>
-#include <optional>
-#include "Guarded.h"
+#include <cstring>
 
-
-extern "C" struct MY_OBJ_HANDLE_DUMMY
+class MyClass : public MY_HANDLE_IMPL
 {
-    char _unused;
-};
-using MY_OBJ_HANDLE = struct MY_OBJ_HANDLE_DUMMY*;
+	std::string _val = "test";
+public :
+	size_t GetString(char* buf, size_t len) const noexcept override  {
+		if (len == 0 || buf == nullptr)
+		{
+			return _val.length() + 1;
+		}
 
-class MyClass : public MY_OBJ_HANDLE_DUMMY
-{
-    Guarded<int> m_value{ -1 };
-public:
-    void SetGet(bool bSet, int& value)
-    {
-        std::lock_guard lock(m_value);
-        if (bSet)
-        {
-            m_value.get() = value;
-        }
-        else
-        {
-            value = m_value.get();
-        }
-    }
+		buf[0] = 0;
+		strncat(buf, _val.c_str(), len - 1);
+		return _val.length() + 1;
+	}
 };
 
-extern "C" MY_OBJ_HANDLE CreateMyClass()
+extern "C" MY_HANDLE GetInstance()
 {
-    return static_cast<MY_OBJ_HANDLE>(new MyClass);
-}
-extern "C" void DestructMyClass(MY_OBJ_HANDLE h)
-{
-    delete static_cast<MyClass*>(h);
+	return new MyClass;
 }
 
-extern "C" void SetValue(MY_OBJ_HANDLE h, int value)
+extern "C" size_t GetSize( MY_HANDLE p)
 {
-    auto c = static_cast<MyClass*>(h);
-    c->SetGet(true, value);
+	return p->GetString(nullptr, 0);
+}
+extern "C" size_t GetString( MY_HANDLE p, char* buf, size_t len)
+{
+	return p->GetString(buf, len);
 }
 
-extern "C" int GetValue(MY_OBJ_HANDLE h)
+extern "C" void DestructInstance(MY_HANDLE p)
 {
-    auto c = static_cast<MyClass*>(h);
-    int value;
-    c->SetGet(false, value);
-    return value;
-}
-
-
-int main()
-{
-    auto h = CreateMyClass();
-
-    //Do stuff with h
-    SetValue(h, 123);
-    int value = GetValue(h);
-    std::cout << " read " << value << "\n";
-
-
-    DestructMyClass(h);
-
+	delete p;
 }
