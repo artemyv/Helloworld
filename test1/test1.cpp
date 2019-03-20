@@ -2,37 +2,59 @@
 #include <string>
 #include <cstring>
 
-class MyClass : public MY_HANDLE_IMPL
+extern "C" struct IFactoryApi
+{
+	virtual ~IFactoryApi() = default;
+
+	virtual std::string GetString() const = 0;
+	virtual void SetString(std::string&& val) = 0;
+	virtual void SetString(const std::string_view& val) = 0;
+};
+
+class MyClass : public IFactoryApi
 {
 	std::string _val = "test";
 public :
-	size_t GetString(char* buf, size_t len) const noexcept override  {
-		if (len == 0 || buf == nullptr)
-		{
-			return _val.length() + 1;
-		}
-
-		buf[0] = 0;
-		strncat(buf, _val.c_str(), len - 1);
-		return _val.length() + 1;
+	std::string GetString() const override  {
+		return _val;
+	}
+	void SetString(const std::string_view& val) override {
+		_val = val;
+	}
+	void SetString(std::string&& val) override {
+		_val = std::move(val);
 	}
 };
 
-extern "C" MY_HANDLE GetInstance()
+extern "C"  IFactoryApi* GetInstance()
 {
 	return new MyClass;
 }
 
-extern "C" size_t GetSize( MY_HANDLE p)
+extern "C" size_t GetSize(const  IFactoryApi* p)
 {
-	return p->GetString(nullptr, 0);
+	return p->GetString().size()+1;
 }
-extern "C" size_t GetString( MY_HANDLE p, char* buf, size_t len)
+extern "C" size_t GetString(const IFactoryApi* p, char* buf, size_t len)
 {
-	return p->GetString(buf, len);
+	auto res = p->GetString();
+	if (len == 0 || buf == nullptr)
+	{
+		return res.length() + 1;
+	}
+
+	buf[0] = 0;
+	strncat(buf, res.c_str(), len - 1);
+	return res.length() + 1;
 }
 
-extern "C" void DestructInstance(MY_HANDLE p)
+extern "C" void SetString(struct IFactoryApi* p, const char* buf)
+{
+	p->SetString(buf);
+}
+
+
+extern "C" void DestructInstance(IFactoryApi* p)
 {
 	delete p;
 }
