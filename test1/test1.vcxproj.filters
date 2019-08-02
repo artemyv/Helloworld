@@ -18,15 +18,9 @@
     <ClCompile Include="test1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="widget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Guarded.h">
+    <ClInclude Include="aggregator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

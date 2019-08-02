@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <builddir>Hello-cppcheck-build-dir</builddir>
+    <platform>Unspecified</platform>
+    <importproject>Hello.sln</importproject>
+    <analyze-all-vs-configs>true</analyze-all-vs-configs>
+    <libraries>
+        <library>windows</library>
+    </libraries>
+    <tools>
+        <tool>clang-tidy</tool>
+    </tools>
+</project>

@@ -109,16 +109,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="test1.cpp" />
-    <ClCompile Include="widget.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Guarded.h" />
-    <ClInclude Include="test.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Utility\Utility.vcxproj">
-      <Project>{ce0fbf85-a08c-454f-ad6e-b0dde98337a7}</Project>
-    </ProjectReference>
+    <ClInclude Include="aggregator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
