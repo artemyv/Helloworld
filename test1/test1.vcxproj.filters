@@ -23,5 +23,8 @@
     <ClInclude Include="aggregator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="aggregator_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

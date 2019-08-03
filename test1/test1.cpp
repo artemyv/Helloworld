@@ -1,4 +1,5 @@
-﻿#include "aggregator.h"
+﻿//#include "aggregator.h"
+#include "aggregator_t.h"
 
 #include <iostream>
 
