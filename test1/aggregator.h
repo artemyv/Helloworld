@@ -3,33 +3,33 @@
 template <class T>
 class Aggregator
 {
-	int _num;
-	int _denom;
-	T _value;
-	constexpr Aggregator(T t, int num, int denom) : _num(num), _denom(denom), _value(t) {}
+	int m_nom;
+	int m_denom;
+	T m_value;
+	constexpr Aggregator(T t, int nom, int denom) : m_nom(nom), m_denom(denom), m_value(t) {}
 
 public:
-	explicit constexpr Aggregator(T t) : _num(1), _denom(1),_value(t) {}
+	explicit constexpr Aggregator(T t) : m_nom(1), m_denom(1),m_value(t) {}
 
 	constexpr auto add(const Aggregator<T>& right) const
 	{
 		return Aggregator<T>
-			(normalize(_num*right._denom, _value, right._num *_denom, right._value), _num*right._denom + right._num *_denom, right._denom*_denom );
+			(normalize(m_nom*right.m_denom, m_value, right.m_nom *m_denom, right.m_value), m_nom*right.m_denom + right.m_nom *m_denom, right.m_denom*m_denom );
 	}
 
 	constexpr auto multiply (int right) const
 	{
-		return Aggregator<T>(_value, _num*right, _denom);
+		return Aggregator<T>(m_value, m_nom*right, m_denom);
 	}
 
 	constexpr auto divide(int right) const
 	{
-		return Aggregator<T>(_value, _num, _denom*right);
+		return Aggregator<T>(m_value, m_nom, m_denom*right);
 	}
 	constexpr const T& get() const
 	{
-		static_assert(_num == _denom, "Not pure value");
-		return _value;
+		static_assert(m_nom == m_denom, "Not pure value");
+		return m_value;
 	}
 };
 
