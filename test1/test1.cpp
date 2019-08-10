@@ -1,39 +1,38 @@
-﻿//#include "aggregator.h"
-#include "aggregator_t.h"
+﻿#include <iostream>
 
-#include <iostream>
+namespace detail {
 
-class Point
-{
-	double _x;
-	double _y;
+inline namespace v1 {
+    template <char... S>
+    struct char_list {
+        static constexpr const char chars[sizeof...(S) + 1] = { S..., '\0' };
+    };
 
-	friend std::ostream& operator << (std::ostream& o, const Point& p);
-	friend constexpr Point normalize(int weight1, Point p1, int weight2, Point p2);
-public:
-	constexpr Point(double x, double y) : _x(x), _y(y) {}
-};
+    template <char... S>
+    constexpr const char char_list<S...>::chars[sizeof...(S) + 1];
 
-std::ostream& operator << (std::ostream& o, const Point& p)
-{
-	return o << '(' << p._x << ',' << p._y << ')';
+    template <size_t N, char... S>
+    struct log_pattern {
+        using type = typename log_pattern<N - 1, '{', '}', S...>::type;
+    };
+
+    template <char... S>
+    struct log_pattern<0, S...> {
+        using type = char_list<S...>;
+    };
+
+    template <size_t N>
+    constexpr auto make_pattern()
+    {
+		[[gsl::suppress(bounds.3)]]return detail::log_pattern<N>::type::chars;
+    }
+
 }
-
-constexpr Point normalize(int weight1, Point p1, int weight2, Point p2)
-{
-	return Point((weight1*p1._x + weight2 * p2._x) / (weight1 + weight2), (weight1*p1._y + weight2 * p2._y) / (weight1 + weight2));
-}
+} // namespace detail
 
 int main()
 {
-	constexpr Point p(1, 2);
+    constexpr auto pattern { detail::make_pattern<5>() };
 
-	std::cout << p << '\n';
-
-	constexpr Point p2(2, 3);
-	constexpr Aggregator a( p );
-	constexpr auto res = (a +p2);
-	constexpr auto res2 = res / 2;
-
-	std::cout << res2.get() << '\n';
+    std::cout << pattern << '\n';
 }
