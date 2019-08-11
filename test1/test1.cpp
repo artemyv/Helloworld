@@ -108,35 +108,33 @@ template <typename Seq> struct remove_last {
   using type = typename apply<std::make_index_sequence<Seq::size - 1>>::type;
 };
 
-// template <char... S> struct char_list {
-//	static constexpr const char chars[sizeof...(S) + 1] = { S..., '\0' };
-//};
-//
-// template <typename IndexSequence, char... S> struct log_pattern;
-//
-// template <size_t... f, char... S> struct log_pattern<flags<f...>, S...> {
-//	using type = typename log_pattern<remove_last<flags<f...>, S..., '{',
-//'}'>::type;
-//};
-//
-// template <char... S> struct log_pattern<flags<>, S...> {
-//	using type = char_list<S...>;
-//};
-//
+template <char... S> struct char_list {
+  static constexpr const char chars[sizeof...(S) + 1] = {S..., '\0'};
+};
+
+template <typename IndexSequence, char... S> struct log_pattern;
+
+template <std::size_t... f, char... S>
+struct log_pattern<flag_seq<f...>, S...> {
+  using full_seq = typename flag_seq<f...>;
+  using short_seq = typename remove_last<full_seq>::type;
+  using type = typename log_pattern<short_seq, S..., '{', '}'>::type;
+};
+template <char... S> struct log_pattern<flag_seq<>, S...> {
+  using type = char_list<S...>;
+};
+
 // template <size_t... f> constexpr auto make_pattern() {
 //	[[gsl::suppress(bounds .3)]] return
-//detail::log_pattern<flags<f...>>::type::chars;
+// detail::log_pattern<flags<f...>>::type::chars;
 //}
 
 } // namespace v4
 } // namespace detail
 
-int main() noexcept {
-  using type = detail::flag_seq<0, 1>;
-  using pattern = detail::remove_last<type>::type;
-  using pattern2 = detail::flag_seq<0>;
-  static_assert(std::is_same_v<pattern, pattern2>, "!");
-  // using type2 = detail::log_pattern<type>::type;
-  // static_assert(std::is_same<type2, detail::char_list<'{','}', '{', '}'>>,
-  // "!");
+int main() {
+  using type = detail::flag_seq<0, 1,0,0>;
+  using type2 = detail::log_pattern<type>::type;
+
+  std::cout << type2::chars << '\n';
 }
