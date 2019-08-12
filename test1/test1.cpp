@@ -1,65 +1,33 @@
-﻿#include <iostream>
+﻿#include "details.v1.h"
+#include "details.v2.h"
+#include "details.v3.h"
 
-namespace detail {
-inline namespace v4 {
+#include <iostream>
 
-template <std::size_t... f> struct flag_seq {
-  static constexpr const std::size_t values[] = {f...};
-  static constexpr const std::size_t size = sizeof...(f);
-  static constexpr const std::size_t last = values[size - 1];
-};
+#include <codeanalysis\warnings.h>
+#pragma warning(push, 4)
+#pragma warning(disable : ALL_CODE_ANALYSIS_WARNINGS)
+#include <spdlog/spdlog.h>
+#pragma warning(pop)
 
-template <typename Seq> struct remove_last {
+#define LOG_STREAM_CALL(logger, level)                                         \
+  logger && logger->should_log(level) &&                                       \
+      logger_stream::detail::LogStream() ==                                    \
+          logger_stream::detail::make_forwarder(                               \
+              [a_logger = logger, a_level = level](const char *pattern,        \
+                                                   auto &&... a) {             \
+                a_logger->log(                                                 \
+                    spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION},   \
+                    a_level, pattern, std::forward<decltype(a)>(a)...);        \
+                return true;                                                   \
+              })
 
-  template <typename Indexes> struct apply;
-
-  template <int... I> struct apply<std::index_sequence<I...>> {
-    using type = flag_seq<Seq::values[I]...>;
-  };
-
-  using type = typename apply<std::make_index_sequence<Seq::size - 1>>::type;
-};
-
-template <char... S> struct char_list {
-  static constexpr const char chars[sizeof...(S) + 1] = {S..., '\0'};
-};
-
-template <std::size_t flag> struct log_format {
-  static constexpr const char chars[] = {'{', '}'};
-  static constexpr const std::size_t size = sizeof(chars);
-};
-
-template <> struct log_format<1> {
-	static constexpr const char chars[] = { '{','0',':', 'x' ,'}' };
-	static constexpr const std::size_t size = sizeof(chars);
-};
-
-template <typename IndexSequence, char... S> struct log_pattern;
-
-template <std::size_t... f, char... S>
-struct log_pattern<flag_seq<f...>, S...> {
-  using full_seq = typename flag_seq<f...>;
-  using short_seq = typename remove_last<full_seq>::type;
-  using format_seq = log_format<full_seq::last>;
-  template <typename Indexes> struct apply;
-  template <int... I> struct apply<std::index_sequence<I...>> {
-    using type = typename log_pattern<short_seq, S..., format_seq::chars[I]...>::type;
-  };
-
-  using type = typename apply<std::make_index_sequence<format_seq::size>>::type;
-};
-template <char... S> struct log_pattern<flag_seq<>, S...> {
-  using type = char_list<S...>;
-};
-
- template <size_t... f> constexpr auto make_pattern() {
-	[[gsl::suppress(bounds .3)]] return
- detail::log_pattern<flag_seq<f...>>::type::chars;
-}
-
-} // namespace v4
-} // namespace detail
+#define LOG_STREAM_INFO(logger) LOG_STREAM_CALL(logger, spdlog::level::info)
 
 int main() {
-  std::cout << detail::make_pattern<0, 1, 0, 0>() << '\n';
+  auto logger = spdlog::default_logger();
+  LOG_STREAM_INFO(logger) << "Welcome to spdlog version " << SPDLOG_VER_MAJOR
+                          << '.' << SPDLOG_VER_MINOR << '.' << SPDLOG_VER_PATCH;
+
+  // std::cout << logger_stream::detail::v2::make_pattern<0, 1, 0, 0>() << '\n';
 }

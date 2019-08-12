@@ -64,20 +64,26 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <Optimization  Condition="'$(Configuration))'=='Debug'">Disabled</Optimization>
-      <Optimization  Condition="'$(Configuration))'=='Release'">MaxSpeed</Optimization>
-      <FunctionLevelLinking  Condition="'$(Configuration))'=='Release'">true</FunctionLevelLinking>
-      <PreprocessorDefinitions  Condition="'$(Configuration)'=='Debug'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions  Condition="'$(Configuration)'=='Release'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions  Condition="'$(Platform)'=='Win32'">WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Optimization Condition="'$(Configuration))'=='Debug'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration))'=='Release'">MaxSpeed</Optimization>
+      <FunctionLevelLinking Condition="'$(Configuration))'=='Release'">true</FunctionLevelLinking>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Debug'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Release'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Platform)'=='Win32'">WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <EnableCOMDATFolding  Condition="'$(Configuration))'=='Release'">true</EnableCOMDATFolding>
-      <OptimizeReferences  Condition="'$(Configuration))'=='Release'">true</OptimizeReferences>
+      <EnableCOMDATFolding Condition="'$(Configuration))'=='Release'">true</EnableCOMDATFolding>
+      <OptimizeReferences Condition="'$(Configuration))'=='Release'">true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="test1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="details.v1.h" />
+    <ClInclude Include="details.v2.h" />
+    <ClInclude Include="details.v3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
