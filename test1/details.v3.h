@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <ios>
 #include <utility>
 
 #ifndef LOGGER_STREAM_DETAILS_V3
@@ -63,23 +64,26 @@ make_forwarder(F &&f) noexcept
     return forwarder<flag, PATTERN, F>(std::forward<F>(f));
 }
 
-template <std::size_t flag, typename PATTERN, typename F, typename T>
-decltype(auto)
-operator<<(forwarder<flag, PATTERN, F> &&ap, T &&t);
+//template <std::size_t flag, typename PATTERN, typename F, typename T>
+//decltype(auto)
+//operator<<(forwarder<flag, PATTERN, F> &&ap, T t);
 
-template <std::size_t flag, char... S, typename F, typename T>
+template <std::size_t flag, char... S, typename F, typename T, typename = std::enable_if_t<!std::is_function_v<T>>>
 constexpr decltype(auto)
-operator<<(forwarder<flag, char_list<S...>, F> &&ap, T &&t) noexcept
+operator<<(forwarder<flag, char_list<S...>, F> &&ap, const T &t) noexcept
 {
     return make_forwarder<0, typename log_pattern<flag, S...>::type>(
         [ap = std::forward<forwarder<flag, char_list<S...>, F>>(ap),
-         t  = std::forward<T>(t)](const char *s, auto &&... a) { return ap(s, t, a...); });
+         t  = std::forward<const T &>(t)](const char *s, auto &&... a) { return ap(s, t, a...); });
 }
-template <std::size_t flag, typename PATTERN, typename F, typename RET>
+template <std::size_t flag, typename PATTERN, typename F>
 decltype(auto)
-operator<<(forwarder<flag, PATTERN, F> &&ap, RET (*manip)(forwarder<flag, PATTERN, F> &))
+operator<<(forwarder<flag, PATTERN, F> &&ap, std::ios_base&(*manip)(std::ios_base&))
 {
-    return (*manip)(ap);
+    if constexpr (manip == std::hex)
+        return make_forwarder<flag & 1, PATTERN>([ap](const char *s, auto &&... a) { return ap(s, a...); });
+    else
+        return std::forward<forwarder<flag, PATTERN, F>>(ap);
 }
 
 class LogStream
@@ -98,13 +102,4 @@ class LogStream
 } // namespace detail
 } // namespace logger_stream
 
-namespace std
-{
-template <std::size_t flag, typename PATTERN, typename F>
-decltype(auto)
-hex(logger_stream::detail::forwarder<flag, PATTERN, F> &stream)
-{
-    return logger_stream::detail::make_forwarder<1, PATTERN>(stream.mf);
-}
-} // namespace std
 #endif // LOGGER_STREAM_DETAILS_V3

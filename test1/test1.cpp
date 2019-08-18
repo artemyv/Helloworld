@@ -31,6 +31,6 @@ main()
     LOG_STREAM_INFO(logger) << "Welcome to spdlog version " << SPDLOG_VER_MAJOR << '.' << SPDLOG_VER_MINOR << '.'
                             << SPDLOG_VER_PATCH;
 
-    // LOG_STREAM_INFO(logger) << "test hex" << std::hex << 123;
+    LOG_STREAM_INFO(logger) << "test hex" << std::hex << 123;
     // std::cout << logger_stream::detail::v2::make_pattern<0, 1, 0, 0>() << '\n';
 }
