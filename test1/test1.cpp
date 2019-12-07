@@ -50,7 +50,7 @@ extern "C" size_t GetString(const IFactoryApi* p, char* buf, size_t len)
 
 extern "C" void SetString(struct IFactoryApi* p, const char* buf)
 {
-	p->SetString(buf);
+	p->SetString(std::string_view{buf});
 }
 
 

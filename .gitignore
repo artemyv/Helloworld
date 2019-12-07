@@ -11,3 +11,5 @@ Release
 /test1.psess
 /test1190206.vspx
 /test1/test1-cppcheck-build-dir
+/build-dir
+/win32
